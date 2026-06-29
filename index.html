@@ -181,6 +181,11 @@
   .pop .pc a{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;text-decoration:none;border:1px solid var(--line);font-size:16px}
   .pop select{width:100%;padding:7px;border-radius:8px;border:none;font-family:inherit;font-weight:700;color:#fff;font-size:12.5px;cursor:pointer}
   .leaflet-popup-content{margin:11px 13px;min-width:185px}
+  /* ruta del día */
+  .ritem{display:flex;align-items:center;gap:7px;padding:8px;border:1px solid var(--line);border-radius:9px}
+  .rnum{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+  .riconbtn{background:#f1f5f9;border:1px solid var(--line);border-radius:7px;width:28px;height:28px;cursor:pointer;font-size:11px;flex:none}
+  .poprutabtn{width:100%;margin-top:7px;padding:7px;border-radius:8px;border:1px solid var(--line);font-weight:700;cursor:pointer;font-size:12.5px}
   @media(max-width:560px){
     .toolbar{top:78px}
     .htitle h1{font-size:17px}
@@ -200,9 +205,12 @@
     </div>
     <div class="hspace"></div>
     <div class="hbtns">
-      <button class="hbtn" id="btnAdd">＋ Agregar local</button>
+      <button class="hbtn" id="btnRuta" style="background:rgba(255,255,255,.30)">🚗 Ruta del día (0)</button>
+      <button class="hbtn" id="btnAdd">＋ Agregar</button>
+      <button class="hbtn" id="btnImport" title="Cargar un CSV exportado (para sincronizar celu ↔ PC)">⬆️ Importar CSV</button>
       <button class="hbtn" id="btnExport">⬇️ Exportar CSV</button>
       <button class="hbtn" id="btnReset" title="Borra tu seguimiento y vuelve a los datos originales">↺ Reset</button>
+      <input type="file" id="csvFile" accept=".csv,text/csv" style="display:none">
     </div>
   </div>
 </header>
@@ -271,6 +279,22 @@
     <div class="mfoot">
       <button class="btn ghost" id="mCancel">Cancelar</button>
       <button class="btn primary" id="mSave">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RUTA DEL DÍA -->
+<div class="overlay" id="rutaOverlay">
+  <div class="modal">
+    <h3>🚗 Ruta del día <span id="rutaCount" style="color:var(--muted);font-weight:600;font-size:13px"></span>
+      <button id="rutaClose" style="float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted)">✕</button></h3>
+    <div class="mbody" id="rutaList" style="max-height:52vh;overflow:auto"></div>
+    <div class="mfoot" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <button class="btn ghost" id="rutaVaciar">Vaciar</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost" id="rutaOpt" title="Ordena las paradas por cercanía">📍 Optimizar</button>
+        <button class="btn primary" id="rutaMaps">🧭 Abrir en Google Maps</button>
+      </div>
     </div>
   </div>
 </div>
@@ -585,6 +609,7 @@ function card(l){
     </div>
     <div class="crow">
       <select class="estado" data-act="estado" style="background:${col}">${estOpts}</select>
+      <button class="exp" data-act="ruta" title="Agregar/quitar de la ruta del día" style="${enRuta(l.id)?'background:#dcfce7;border-color:#86efac':''}">🚗</button>
       <button class="exp" data-act="exp">⋯</button>
     </div>
     <div class="panel">
@@ -640,6 +665,7 @@ document.getElementById('stats').addEventListener('click',e=>{
 document.getElementById('grid').addEventListener('click',e=>{
   const c=e.target.closest('.card'); if(!c)return; const id=c.dataset.id; const l=getLead(id); if(!l)return;
   const act=e.target.closest('[data-act]')?.dataset.act;
+  if(act==='ruta'){ toggleRuta(id); return; }
   if(act==='exp'){ c.querySelector('.panel').classList.toggle('open'); }
   if(act==='del'){
     if(confirm('¿Eliminar "'+l.nombre+'" del CRM?')){ DATA=DATA.filter(x=>x.id!==id); save(); render(); }
@@ -678,7 +704,7 @@ document.getElementById('mSave').onclick=()=>{
 
 /* ---------- export CSV ---------- */
 document.getElementById('btnExport').onclick=()=>{
-  const cols=['nombre','tipo','zona','barrio','direccion','telefono','whatsapp','instagram','web','email','hace_reparaciones','estado','seguimiento','proximo','ultimo','notas','fuente'];
+  const cols=['id','nombre','tipo','zona','barrio','direccion','telefono','whatsapp','instagram','web','email','hace_reparaciones','lat','lon','estado','seguimiento','proximo','ultimo','notas','fuente'];
   const head=cols.join(',');
   const esc2=v=>{v=(v==null?'':String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
   const body=DATA.map(l=>cols.map(c=>esc2(l[c])).join(',')).join('\n');
@@ -725,7 +751,8 @@ function popupHTML(l){
       (ig?'<a href="'+ig+'" target="_blank" rel="noopener" title="Instagram" style="background:#fce7f3">📷</a>':'')+
       (maps?'<a href="'+maps+'" target="_blank" rel="noopener" title="Cómo llegar" style="background:#f1f5f9">🧭</a>':'')+
     '</div>'+
-    '<select onchange="mapSetEstado(\''+l.id+'\',this.value)" style="background:'+col+'">'+opts+'</select></div>';
+    '<select onchange="mapSetEstado(\''+l.id+'\',this.value)" style="background:'+col+'">'+opts+'</select>'+
+    '<button class="poprutabtn" style="background:'+(enRuta(l.id)?'#dcfce7':'#f8fafc')+'" onclick="toggleRuta(\''+l.id+'\')">'+(enRuta(l.id)?'✓ En la ruta':'🚗 Agregar a la ruta')+'</button></div>';
 }
 function renderMap(rows){
   if(!MAP) return;
@@ -754,8 +781,98 @@ function mapSetEstado(id,val){
   renderStats(); renderMap();
 }
 
+/* ---------- RUTA DEL DÍA ---------- */
+const RUTA_KEY='sfx_crm_ruta_v1';
+let RUTA=[]; try{ const r=JSON.parse(localStorage.getItem(RUTA_KEY)||'[]'); if(Array.isArray(r)) RUTA=r; }catch(e){}
+function rutaSave(){ try{localStorage.setItem(RUTA_KEY,JSON.stringify(RUTA));}catch(e){} }
+function enRuta(id){ return RUTA.indexOf(id)>=0; }
+function updateRutaBtn(){ const b=document.getElementById('btnRuta'); if(b) b.textContent='🚗 Ruta del día ('+RUTA.length+')'; }
+function toggleRuta(id){
+  const i=RUTA.indexOf(id); if(i>=0)RUTA.splice(i,1); else RUTA.push(id);
+  rutaSave(); updateRutaBtn();
+  if(document.getElementById('rutaOverlay').classList.contains('open')) renderRuta();
+  if(VIEW==='lista') render();
+}
+function rutaRemove(id){ const i=RUTA.indexOf(id); if(i>=0){RUTA.splice(i,1); rutaSave(); updateRutaBtn(); renderRuta(); if(VIEW==='lista')render();} }
+function rutaMove(id,dir){ const i=RUTA.indexOf(id), j=i+dir; if(i<0||j<0||j>=RUTA.length)return; const t=RUTA[i];RUTA[i]=RUTA[j];RUTA[j]=t; rutaSave(); renderRuta(); }
+function _hav(a,b){ const R=6371,rad=Math.PI/180; const dLat=(b[0]-a[0])*rad,dLon=(b[1]-a[1])*rad; const s=Math.sin(dLat/2)**2+Math.cos(a[0]*rad)*Math.cos(b[0]*rad)*Math.sin(dLon/2)**2; return 2*R*Math.asin(Math.sqrt(s)); }
+function rutaOptimizar(){
+  const pts=RUTA.map(getLead).filter(Boolean);
+  const con=pts.filter(l=>parseFloat(l.lat)&&parseFloat(l.lon));
+  const sin=pts.filter(l=>!(parseFloat(l.lat)&&parseFloat(l.lon)));
+  if(con.length<3){ alert('Necesitás al menos 3 locales con ubicación para optimizar el orden.'); return; }
+  const used=new Set(); const order=[]; let cur=con[0]; used.add(cur.id); order.push(cur);
+  while(order.length<con.length){
+    let best=null,bd=Infinity;
+    for(const l of con){ if(used.has(l.id))continue; const d=_hav([+cur.lat,+cur.lon],[+l.lat,+l.lon]); if(d<bd){bd=d;best=l;} }
+    used.add(best.id); order.push(best); cur=best;
+  }
+  RUTA=order.map(l=>l.id).concat(sin.map(l=>l.id)); rutaSave(); renderRuta();
+}
+function rutaAbrirMaps(){
+  const pts=RUTA.map(getLead).filter(Boolean);
+  if(!pts.length){ alert('Agregá locales a la ruta primero (botón 🚗).'); return; }
+  const stop=l=>(parseFloat(l.lat)&&parseFloat(l.lon))?(l.lat+','+l.lon):encodeURIComponent([l.direccion,l.barrio,'Buenos Aires'].filter(Boolean).join(', '));
+  const cap=pts.slice(0,10);
+  const dest=stop(cap[cap.length-1]);
+  const way=cap.slice(0,-1).map(stop).join('|');
+  let url='https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+dest;
+  if(way) url+='&waypoints='+way;
+  window.open(url,'_blank');
+  if(pts.length>10) alert('Google Maps permite hasta 10 paradas por link. Se abrieron las primeras 10; para el resto armá una segunda ruta.');
+}
+function renderRuta(){
+  const cont=document.getElementById('rutaList');
+  const pts=RUTA.map(getLead).filter(Boolean);
+  document.getElementById('rutaCount').textContent='('+pts.length+')';
+  if(!pts.length){ cont.innerHTML='<div style="color:var(--muted);text-align:center;padding:24px 10px">Todavía no agregaste locales.<br>Tocá <b>🚗</b> en una tarjeta o en el mapa para sumarlos a la ruta.</div>'; return; }
+  cont.innerHTML=pts.map((l,i)=>'<div class="ritem"><div class="rnum">'+(i+1)+'</div>'+
+    '<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:13.5px">'+esc(l.nombre)+' '+(l.hace_reparaciones==='Sí'?'🔧':'')+'</div>'+
+    '<div style="font-size:11.5px;color:var(--muted)">'+esc([l.direccion,l.barrio].filter(Boolean).join(', '))+((parseFloat(l.lat)&&parseFloat(l.lon))?'':' · ⚠ sin ubicación')+'</div></div>'+
+    '<button class="riconbtn" onclick="rutaMove(\''+l.id+'\',-1)" title="Subir">▲</button>'+
+    '<button class="riconbtn" onclick="rutaMove(\''+l.id+'\',1)" title="Bajar">▼</button>'+
+    '<button class="riconbtn" onclick="rutaRemove(\''+l.id+'\')" title="Quitar" style="color:var(--red)">✕</button></div>').join('');
+}
+
+/* ---------- importar CSV (sincronizar celu ↔ PC) ---------- */
+function parseCSV(text){
+  text=text.replace(/^﻿/,''); const rows=[]; let row=[],f='',q=false;
+  for(let i=0;i<text.length;i++){ const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else { if(c==='"')q=true; else if(c===','){row.push(f);f='';} else if(c==='\n'){row.push(f);rows.push(row);row=[];f='';} else if(c!=='\r')f+=c; }
+  }
+  if(f.length||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+function importCSV(text){
+  const rows=parseCSV(text); if(rows.length<2){ alert('El CSV está vacío o no es válido.'); return; }
+  if(!confirm('Importar este CSV actualizará tu seguimiento (estado, notas, fechas) con lo que traiga el archivo y sumará los locales agregados a mano. ¿Seguir?')) return;
+  const head=rows[0].map(h=>h.trim()); const idx=k=>head.indexOf(k);
+  let upd=0,add=0;
+  for(let r=1;r<rows.length;r++){ const row=rows[r]; if(!row.some(x=>x&&x.trim()))continue;
+    const get=k=>{ const j=idx(k); return j>=0?(row[j]||'').trim():''; };
+    let id=get('id'); const nombre=get('nombre'); if(!id&&!nombre)continue;
+    if(!id){ id=slugify(nombre+'-'+(get('barrio')||get('zona')))+'-'+slugify((get('direccion')||'').slice(0,12)); }
+    const l=getLead(id);
+    if(l){ ['estado','seguimiento','proximo','ultimo'].forEach(k=>{ if(idx(k)>=0) l[k]=get(k); }); upd++; }
+    else { const n=normalize({nombre,tipo:get('tipo'),zona:get('zona'),barrio:get('barrio'),direccion:get('direccion'),telefono:get('telefono'),whatsapp:get('whatsapp'),instagram:get('instagram'),web:get('web'),email:get('email'),hace_reparaciones:get('hace_reparaciones')||'?',notas:get('notas'),fuente:get('fuente')||'Importado CSV',lat:get('lat'),lon:get('lon'),estado:get('estado')||'No contactado',seguimiento:get('seguimiento'),proximo:get('proximo'),ultimo:get('ultimo')}); n.id=id; DATA.push(n); add++; }
+  }
+  save(); fillSelects(); render();
+  alert('✅ Importado: '+upd+' actualizados, '+add+' agregados.');
+}
+
+/* ---------- wiring ruta + import ---------- */
+document.getElementById('btnRuta').onclick=()=>{ renderRuta(); document.getElementById('rutaOverlay').classList.add('open'); };
+document.getElementById('rutaClose').onclick=()=>document.getElementById('rutaOverlay').classList.remove('open');
+document.getElementById('rutaOverlay').addEventListener('click',e=>{ if(e.target.id==='rutaOverlay') document.getElementById('rutaOverlay').classList.remove('open'); });
+document.getElementById('rutaVaciar').onclick=()=>{ if(RUTA.length&&confirm('¿Vaciar la ruta del día?')){ RUTA=[]; rutaSave(); updateRutaBtn(); renderRuta(); if(VIEW==='lista')render(); } };
+document.getElementById('rutaOpt').onclick=rutaOptimizar;
+document.getElementById('rutaMaps').onclick=rutaAbrirMaps;
+document.getElementById('btnImport').onclick=()=>document.getElementById('csvFile').click();
+document.getElementById('csvFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return; const rd=new FileReader(); rd.onload=()=>{ try{importCSV(rd.result);}catch(err){alert('Error al importar: '+err.message);} document.getElementById('csvFile').value=''; }; rd.readAsText(f); });
+
 /* ---------- init ---------- */
-load(); fillSelects(); render();
+load(); fillSelects(); render(); updateRutaBtn();
 </script>
 </body>
 </html>
