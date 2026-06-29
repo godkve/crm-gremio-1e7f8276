@@ -88,6 +88,9 @@
     padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;cursor:pointer;user-select:none}
   .chk input{accent-color:var(--green);width:15px;height:15px}
   .chk.on{background:#dcfce7;border-color:var(--green-l);color:var(--green-d)}
+  .filtros{display:contents}
+  #btnFiltros{display:none;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--ink)}
+  #btnFiltros.on{background:#dcfce7;border-color:var(--green-l);color:var(--green-d)}
 
   /* GRID */
   #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
@@ -194,7 +197,15 @@
     .hwrap{gap:9px}
     .hbtns{gap:6px}
     .hbtn{padding:6px 9px;font-size:11.5px}
-    .toolbar{top:0}
+    .toolbar{top:0;gap:6px;padding:8px}
+    .viewtoggle button{padding:7px 8px;font-size:12px}
+    .search{min-width:0;flex:1 1 60px}
+    .search input{padding:8px 10px 8px 30px;font-size:13px}
+    .search .ic{left:8px}
+    #btnFiltros{display:inline-flex;align-items:center;gap:4px;flex:none;padding:8px 9px;font-size:12px}
+    .filtros{display:none;width:100%;flex-wrap:wrap;gap:7px}
+    .filtros.open{display:flex}
+    .filtros select.f,.filtros .chk,.filtros #fSort{flex:1 1 45%;min-width:0}
     #grid{grid-template-columns:1fr}
     #map{height:80vh}
   }
@@ -230,16 +241,19 @@
       <span class="ic">🔍</span>
       <input id="q" type="text" placeholder="Buscar por nombre, barrio, dirección, notas…">
     </div>
-    <select class="f" id="fZona"><option value="">Todas las zonas</option></select>
-    <select class="f" id="fTipo"><option value="">Todos los tipos</option></select>
-    <select class="f" id="fEstado"><option value="">Todos los estados</option></select>
-    <label class="chk" id="chkRepW"><input type="checkbox" id="chkRep"> 🔧 Solo reparaciones</label>
-    <select class="f" id="fSort">
-      <option value="prio">Orden: prioridad</option>
-      <option value="nombre">Orden: nombre A-Z</option>
-      <option value="zona">Orden: zona</option>
-      <option value="estado">Orden: estado</option>
-    </select>
+    <button class="hbtn-f" id="btnFiltros" type="button">⚙ Filtros</button>
+    <div class="filtros" id="filtros">
+      <select class="f" id="fZona"><option value="">Todas las zonas</option></select>
+      <select class="f" id="fTipo"><option value="">Todos los tipos</option></select>
+      <select class="f" id="fEstado"><option value="">Todos los estados</option></select>
+      <label class="chk" id="chkRepW"><input type="checkbox" id="chkRep"> 🔧 Solo reparaciones</label>
+      <select class="f" id="fSort">
+        <option value="prio">Orden: prioridad</option>
+        <option value="nombre">Orden: nombre A-Z</option>
+        <option value="zona">Orden: zona</option>
+        <option value="estado">Orden: estado</option>
+      </select>
+    </div>
   </div>
 
   <div id="grid"></div>
@@ -657,6 +671,7 @@ document.getElementById('fSort').addEventListener('change',e=>{F.sort=e.target.v
 document.getElementById('chkRep').addEventListener('change',e=>{
   F.rep=e.target.checked; document.getElementById('chkRepW').classList.toggle('on',F.rep); render();
 });
+document.getElementById('btnFiltros').onclick=function(){ var open=document.getElementById('filtros').classList.toggle('open'); this.classList.toggle('on',open); };
 
 // stat chips -> filtran por estado / reparaciones
 document.getElementById('stats').addEventListener('click',e=>{
