@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<title>Spot Fixes · CRM Gremio Gaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#16a34a; --green-d:#15803d; --green-l:#22c55e;
+    --ink:#0f172a; --muted:#64748b; --line:#e2e8f0; --bg:#f1f5f9; --card:#ffffff;
+    --blue:#3b82f6; --amber:#f59e0b; --red:#ef4444; --gray:#94a3b8; --violet:#8b5cf6;
+    --shadow:0 1px 2px rgba(15,23,42,.06),0 4px 16px rgba(15,23,42,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased;
+    padding-bottom:48px;
+  }
+  .mono{font-family:'Roboto Mono',ui-monospace,monospace}
+
+  /* HEADER */
+  header{
+    background:linear-gradient(135deg,#15803d 0%,#16a34a 55%,#22c55e 100%);
+    color:#fff; padding:20px 22px 18px; position:sticky; top:0; z-index:40;
+    box-shadow:0 6px 22px rgba(21,128,61,.28);
+  }
+  .hwrap{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .logo{
+    width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.16);
+    display:grid;place-items:center;font-size:24px;flex:none;border:1px solid rgba(255,255,255,.25)
+  }
+  .htitle h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.2px}
+  .htitle p{margin:2px 0 0;font-size:12.5px;opacity:.9}
+  .hspace{flex:1}
+  .hbtns{display:flex;gap:8px;flex-wrap:wrap}
+  .hbtn{
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);color:#fff;
+    padding:8px 13px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:.15s
+  }
+  .hbtn:hover{background:rgba(255,255,255,.28)}
+
+  .container{max-width:1280px;margin:0 auto;padding:18px 18px 0}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:14px}
+  .stat{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px 14px;box-shadow:var(--shadow);cursor:pointer;transition:.15s;position:relative;overflow:hidden
+  }
+  .stat:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,23,42,.1)}
+  .stat.active{outline:2px solid var(--green);outline-offset:-2px}
+  .stat .n{font-size:26px;font-weight:800;line-height:1}
+  .stat .l{font-size:11.5px;color:var(--muted);margin-top:5px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  .stat .bar{position:absolute;left:0;bottom:0;height:3px;width:100%}
+
+  /* TOOLBAR */
+  .toolbar{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px;box-shadow:var(--shadow);position:sticky;top:84px;z-index:30
+  }
+  .search{flex:1;min-width:220px;position:relative}
+  .search input{
+    width:100%;padding:10px 12px 10px 36px;border:1px solid var(--line);border-radius:10px;
+    font-size:14px;font-family:inherit;background:#f8fafc
+  }
+  .search input:focus{outline:2px solid var(--green-l);background:#fff}
+  .search .ic{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.5}
+  select.f,.toolbar .mini{
+    padding:9px 11px;border:1px solid var(--line);border-radius:10px;font-size:13px;
+    font-family:inherit;background:#f8fafc;cursor:pointer;font-weight:500;color:var(--ink)
+  }
+  select.f:focus{outline:2px solid var(--green-l)}
+  .chk{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;
+    padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;cursor:pointer;user-select:none}
+  .chk input{accent-color:var(--green);width:15px;height:15px}
+  .chk.on{background:#dcfce7;border-color:var(--green-l);color:var(--green-d)}
+
+  /* GRID */
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-left:4px solid var(--gray);
+    border-radius:var(--radius);padding:14px 14px 12px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:9px;transition:.15s
+  }
+  .card:hover{box-shadow:0 6px 22px rgba(15,23,42,.1)}
+  .ctop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .cname{font-size:15.5px;font-weight:700;line-height:1.2}
+  .badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
+  .b{font-size:10.5px;font-weight:700;padding:2.5px 7px;border-radius:20px;letter-spacing:.3px;white-space:nowrap}
+  .b.tipo{background:#eef2ff;color:#4f46e5}
+  .b.zona{background:#f1f5f9;color:#475569}
+  .b.rep{background:#fee2e2;color:#b91c1c}
+  .cstar{font-size:18px;flex:none;line-height:1}
+  .addr{font-size:12.5px;color:var(--muted);display:flex;align-items:flex-start;gap:5px;line-height:1.35}
+  .addr a{color:var(--muted);text-decoration:none}
+  .addr a:hover{color:var(--green-d);text-decoration:underline}
+  .notes{font-size:12px;color:#475569;background:#f8fafc;border-radius:8px;padding:7px 9px;line-height:1.4}
+
+  /* CONTACT ICON ROW */
+  .contacts{display:flex;gap:7px;flex-wrap:wrap}
+  .cbtn{
+    width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:#f8fafc;
+    display:grid;place-items:center;cursor:pointer;font-size:16px;text-decoration:none;transition:.15s;color:var(--ink)
+  }
+  .cbtn:hover{transform:translateY(-2px)}
+  .cbtn.wa{background:#dcfce7;border-color:#86efac}
+  .cbtn.tel{background:#dbeafe;border-color:#93c5fd}
+  .cbtn.ig{background:#fce7f3;border-color:#f9a8d4}
+  .cbtn.web{background:#f1f5f9}
+  .cbtn.mail{background:#fef9c3;border-color:#fde047}
+  .cbtn.off{opacity:.28;pointer-events:none;filter:grayscale(1)}
+
+  /* FOOTER OF CARD: estado + collapse */
+  .crow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  select.estado{
+    flex:1;min-width:130px;padding:8px 10px;border-radius:9px;border:1px solid var(--line);
+    font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;color:#fff
+  }
+  .exp{background:#f1f5f9;border:1px solid var(--line);border-radius:9px;padding:8px 11px;
+    cursor:pointer;font-size:12px;font-weight:600;color:var(--muted)}
+  .panel{display:none;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:9px;margin-top:1px}
+  .panel.open{display:flex}
+  .panel label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+  .panel textarea{
+    width:100%;min-height:54px;resize:vertical;padding:8px 10px;border:1px solid var(--line);
+    border-radius:9px;font-size:13px;font-family:inherit;background:#f8fafc
+  }
+  .panel textarea:focus{outline:2px solid var(--green-l);background:#fff}
+  .panel input[type=date]{padding:7px 9px;border:1px solid var(--line);border-radius:9px;font-family:inherit;font-size:13px;background:#f8fafc}
+  .panel .meta{font-size:11px;color:var(--muted)}
+  .panel .meta a{color:var(--green-d)}
+  .del{background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-weight:600;align-self:flex-start;padding:2px 0}
+
+  .empty{text-align:center;padding:60px 20px;color:var(--muted)}
+  .empty .big{font-size:46px;margin-bottom:10px}
+
+  /* MODAL */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;place-items:center;z-index:60;padding:18px}
+  .overlay.open{display:grid}
+  .modal{background:#fff;border-radius:16px;max-width:460px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+  .modal h3{margin:0;padding:16px 18px;border-bottom:1px solid var(--line);font-size:16px}
+  .mbody{padding:16px 18px;display:flex;flex-direction:column;gap:11px}
+  .mbody label{font-size:12px;font-weight:700;color:var(--muted)}
+  .mbody input,.mbody select,.mbody textarea{
+    width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:14px;font-family:inherit;margin-top:3px
+  }
+  .mfoot{padding:14px 18px;border-top:1px solid var(--line);display:flex;gap:9px;justify-content:flex-end}
+  .btn{padding:9px 16px;border-radius:10px;border:none;font-size:14px;font-weight:700;cursor:pointer}
+  .btn.primary{background:var(--green);color:#fff}
+  .btn.primary:hover{background:var(--green-d)}
+  .btn.ghost{background:#f1f5f9;color:var(--ink)}
+
+  .footnote{max-width:1280px;margin:22px auto 0;padding:0 18px;color:var(--muted);font-size:12px;line-height:1.6}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:10px;height:10px;border-radius:50%}
+
+  @media(max-width:560px){
+    .toolbar{top:78px}
+    .htitle h1{font-size:17px}
+    #grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="logo">🛠️</div>
+    <div class="htitle">
+      <h1>Spot Fixes · CRM del Gremio</h1>
+      <p>Prospección de locales de videojuegos — CABA + GBA · repuestos & servicio técnico mayorista</p>
+    </div>
+    <div class="hspace"></div>
+    <div class="hbtns">
+      <button class="hbtn" id="btnAdd">＋ Agregar local</button>
+      <button class="hbtn" id="btnExport">⬇️ Exportar CSV</button>
+      <button class="hbtn" id="btnReset" title="Borra tu seguimiento y vuelve a los datos originales">↺ Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="stats" id="stats"></div>
+
+  <div class="toolbar">
+    <div class="search">
+      <span class="ic">🔍</span>
+      <input id="q" type="text" placeholder="Buscar por nombre, barrio, dirección, notas…">
+    </div>
+    <select class="f" id="fZona"><option value="">Todas las zonas</option></select>
+    <select class="f" id="fTipo"><option value="">Todos los tipos</option></select>
+    <select class="f" id="fEstado"><option value="">Todos los estados</option></select>
+    <label class="chk" id="chkRepW"><input type="checkbox" id="chkRep"> 🔧 Solo reparaciones</label>
+    <select class="f" id="fSort">
+      <option value="prio">Orden: prioridad</option>
+      <option value="nombre">Orden: nombre A-Z</option>
+      <option value="zona">Orden: zona</option>
+      <option value="estado">Orden: estado</option>
+    </select>
+  </div>
+
+  <div id="grid"></div>
+  <div id="empty" class="empty" style="display:none">
+    <div class="big">🔍</div>
+    <div>No hay locales que coincidan con el filtro.</div>
+  </div>
+</div>
+
+<div class="footnote">
+  <div><b>Cómo se usa:</b> tocá los íconos para escribir por WhatsApp (con mensaje de presentación ya cargado), llamar, abrir Instagram/web o el mapa. Cambiá el <b>estado</b> de cada lead y agregá notas de seguimiento + fecha de próximo contacto. Todo se guarda automáticamente en este navegador. Exportá a CSV para respaldar o compartir con el equipo.</div>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--gray)"></i> No contactado</span>
+    <span><i class="dot" style="background:var(--blue)"></i> Contactado</span>
+    <span><i class="dot" style="background:var(--amber)"></i> Interesado</span>
+    <span><i class="dot" style="background:var(--green-l)"></i> Cliente</span>
+    <span><i class="dot" style="background:var(--red)"></i> Descartado</span>
+    <span>🔧 = hace reparaciones (prospecto caliente)</span>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3>Agregar local manualmente</h3>
+    <div class="mbody">
+      <div><label>Nombre *</label><input id="m_nombre" placeholder="Nombre del local"></div>
+      <div><label>Tipo</label>
+        <select id="m_tipo"><option>Consolas/Juegos</option><option>Retro</option><option>Accesorios</option><option>Reparación</option><option>Importación</option><option>Mixto</option></select>
+      </div>
+      <div><label>Zona</label>
+        <select id="m_zona"><option>CABA-Centro</option><option>CABA-Norte</option><option>CABA-Oeste/Sur</option><option>GBA-Norte</option><option>GBA-Oeste</option><option>GBA-Sur</option></select>
+      </div>
+      <div><label>Barrio / Localidad</label><input id="m_barrio"></div>
+      <div><label>Dirección</label><input id="m_direccion"></div>
+      <div><label>WhatsApp / Teléfono</label><input id="m_whatsapp" placeholder="11 1234-5678"></div>
+      <div><label>Instagram</label><input id="m_instagram" placeholder="@usuario"></div>
+      <div><label>¿Hace reparaciones?</label><select id="m_rep"><option>?</option><option>Sí</option><option>No</option></select></div>
+      <div><label>Notas</label><textarea id="m_notas" rows="2"></textarea></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn ghost" id="mCancel">Cancelar</button>
+      <button class="btn primary" id="mSave">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   SPOT FIXES — CRM Gremio Gaming
+   Datos sembrados (SEED) + seguimiento persistente en localStorage
+   ============================================================ */
+const LS_KEY = 'sfx_crm_gremio_v1';
+
+// Mensaje de presentación que se carga al abrir WhatsApp ({nombre} se reemplaza)
+const PITCH = '¡Hola {nombre}! 👋 Te escribo de *Spot Fixes*. Somos mayoristas de repuestos de consolas (PlayStation, Xbox, Nintendo, retro) y damos servicio técnico al gremio. Trabajamos con locales como el tuyo. ¿Te puedo pasar la lista de precios mayorista? 💚';
+
+const ESTADOS = [
+  {k:'No contactado', c:'#94a3b8'},
+  {k:'Contactado',    c:'#3b82f6'},
+  {k:'Interesado',    c:'#f59e0b'},
+  {k:'Cliente',       c:'#22c55e'},
+  {k:'Descartado',    c:'#ef4444'}
+];
+const ESTADO_COLOR = Object.fromEntries(ESTADOS.map(e=>[e.k,e.c]));
+
+// === DATOS DE LOS LOCALES (relevamiento web, jun-2026) ===
+// Campos vacíos "" = dato no hallado/no verificado. Verificá antes de contactar.
+const SEED = [
+// ---------- CABA CENTRO / MICROCENTRO ----------
+{nombre:"Apolo Games",tipo:"Consolas/Juegos",direccion:"Av. Corrientes 1382, Local 2 (Galería Apolo)",barrio:"San Nicolás",zona:"CABA-Centro",telefono:"+54 11 2873-8709",whatsapp:"+54 9 11 2873-8709",instagram:"@apologames.ar",web:"https://www.facebook.com/Apologames.ar/",email:"Apologamescontacto@gmail.com",hace_reparaciones:"?",notas:"Electrónica, videojuegos, consolas y accesorios en Galería Apolo. ~8.500 seg. IG. No se confirmó si hace service.",fuente:"apologames.ar (IG)"},
+{nombre:"Proxyworld Coleccionables",tipo:"Mixto",direccion:"Av. Corrientes 1382, Local 14 (Galería Apolo)",barrio:"San Nicolás",zona:"CABA-Centro",telefono:"+54 11 4189-4360",whatsapp:"",instagram:"",web:"https://proxyworld.com.ar/",email:"",hace_reparaciones:"No",notas:"Coleccionables/figuras + merch de videojuegos. Galería Apolo. Prospecto débil.",fuente:"proxyworld.com.ar"},
+{nombre:"Punto Gamer",tipo:"Consolas/Juegos",direccion:"Florida 165, Local 24 (Galería Güemes)",barrio:"San Nicolás",zona:"CABA-Centro",telefono:"4342-2332",whatsapp:"",instagram:"",web:"https://puntogamer.com.ar/",email:"",hace_reparaciones:"?",notas:"Videojuegos físicos desde 2014, +500 títulos PS/Nintendo/Xbox. Lun-Vie 9:30-19, Sáb 10-14.",fuente:"puntogamer.com.ar"},
+{nombre:"Evergames",tipo:"Mixto",direccion:"Bartolomé Mitre 933",barrio:"Monserrat",zona:"CABA-Centro",telefono:"011 4770-7223",whatsapp:"+54 9 11 6200-6608",instagram:"@evergames.ar",web:"https://evergames.com.ar/",email:"evergamescontacto@gmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Retro+actuales desde 2014. Vende consolas/juegos/accesorios y REPUESTOS (PS/Nintendo/Xbox/Steam Deck), service (Switch) y tiene CUENTA MAYORISTA. Lun-Vie 10-19, Sáb 10-15.",fuente:"evergames.com.ar"},
+{nombre:"FullH4rd",tipo:"Mixto",direccion:"Florida 537, Local 370 PB (Galería Jardín)",barrio:"San Nicolás",zona:"CABA-Centro",telefono:"+54 11 7079-9997",whatsapp:"",instagram:"@fullh4rd",web:"https://www.fullh4rd.com.ar/",email:"web@fullh4rd.com.ar",hace_reparaciones:"?",notas:"Tienda gamer grande en Galería Jardín: PC gamer, hardware, periféricos y videojuegos. Cadena con e-commerce.",fuente:"fullh4rd.com.ar"},
+{nombre:"Maximus Gaming Hardware",tipo:"Mixto",direccion:"Florida 537, Local 379 PB (Galería Jardín)",barrio:"San Nicolás",zona:"CABA-Centro",telefono:"+54 11 2357-5522",whatsapp:"+54 11 15-2357-5522",instagram:"@maximusgamingok",web:"https://www.maximus.com.ar/",email:"",hace_reparaciones:"?",notas:"Armado PC gamer, componentes, periféricos, monitores. Foco PC/hardware. Otra suc. en Floresta.",fuente:"maximus.com.ar"},
+{nombre:"EAGUGEL GAMES",tipo:"Mixto",direccion:"",barrio:"Microcentro (s/dir verificada)",zona:"CABA-Centro",telefono:"",whatsapp:"",instagram:"@eagugel_games",web:"https://www.instagram.com/eagugel_games/",email:"",hace_reparaciones:"Sí",notas:"Juegos, consolas y servicio técnico. Aparece en microcentro/Galería Jardín pero SIN dirección/tel verificados. Verificar antes de contactar.",fuente:"IG @eagugel_games"},
+// ---------- CABA OESTE / SUR ----------
+{nombre:"Megasoft Argentina",tipo:"Mixto",direccion:"Av. Rivadavia 5320, Local 22",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 7248-6299",whatsapp:"+54 9 11 7248-6299",instagram:"@megasoftargentina",web:"https://megasoftargentina.com.ar/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Consolas/accesorios + service PS5/PS4/PS3/Xbox con repuestos originales, presupuesto 24-72h. Lun-Vie 10-18.",fuente:"megasoftargentina.com.ar"},
+{nombre:"Triforce Game Shop",tipo:"Mixto",direccion:"Av. Corrientes 5239, Local 7 (Galería Galecor)",barrio:"Villa Crespo",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"+54 9 11 2253-5546",instagram:"@triforce.gameshop",web:"https://triforcegameshop.com/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Consolas/juegos/accesorios + reparación Switch (sticks, pantallas, baterías), PS4/PS3, 3DS, GameBoy, Xbox. Compra sticks/flex/pantallas.",fuente:"triforcegameshop.com"},
+{nombre:"Museum Games",tipo:"Retro",direccion:"Av. Rivadavia 5283, Local 12 (Galería Caribe)",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 4902-1105",whatsapp:"",instagram:"@museum_games",web:"https://museumgames.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Primer local retro del país (2005). Compra/venta/canje + servicio técnico. Lun-Vie 14-20, Sáb 13-20.",fuente:"museumgames.com.ar"},
+{nombre:"XGamers",tipo:"Mixto",direccion:"Av. Rivadavia 5320, Local 26",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 4903-1039",whatsapp:"",instagram:"",web:"http://xgamers.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Videojuegos, accesorios y servicio técnico. FB: xgamerscaballito. Verificar local exacto.",fuente:"xgamers.com.ar"},
+{nombre:"Soy Gamer Caballito",tipo:"Consolas/Juegos",direccion:"Av. Acoyte 193",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 4839-1751",whatsapp:"+54 11 6954-8181",instagram:"",web:"https://www.soygamerargentina.com/",email:"caballito@soygamerargentina.com",hace_reparaciones:"?",notas:"Cadena, suc. Caballito. Consolas nuevas/usadas, juegos, accesorios. Lun-Sáb 10-20.",fuente:"soygamerargentina.com"},
+{nombre:"CD Market Caballito",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 4988",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 2454-3806",whatsapp:"+54 11 3531-1909",instagram:"",web:"https://www.cdmarket.com.ar/",email:"",hace_reparaciones:"?",notas:"Suc. de cadena CD Market. Consolas PS5/Xbox/Switch, juegos, accesorios. Lun-Sáb 10-20.",fuente:"latinoplaces.com"},
+{nombre:"CD Market Flores",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 6585",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"+54 11 4631-0056",whatsapp:"+54 11 5840-9876",instagram:"",web:"https://www.cdmarket.com.ar/",email:"",hace_reparaciones:"?",notas:"Suc. de cadena CD Market. Consolas, juegos, accesorios. Lun-Sáb 10-20.",fuente:"latinoplaces.com"},
+{nombre:"Gaming City Caballito",tipo:"Mixto",direccion:"Av. Rivadavia 5040, Local 14 (Galería Vía Cavour)",barrio:"Caballito",zona:"CABA-Oeste/Sur",telefono:"+54 11 5370-2424",whatsapp:"",instagram:"@gamingcitycaballito",web:"https://www.gamingcity.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Cadena informática+gaming. Consolas/PC + sección Servicios. Lun-Vie 10-19, Sáb 10-14:30.",fuente:"gamingcity.com.ar"},
+{nombre:"Gaming City Liniers",tipo:"Mixto",direccion:"Av. Rivadavia 11063",barrio:"Liniers",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"https://www.gamingcity.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Suc. Liniers de la cadena Gaming City (informática+gaming, ofrece servicios). Confirmar tel.",fuente:"gamingcity.com.ar"},
+{nombre:"MBTecnic",tipo:"Reparación",direccion:"Av. Directorio 2449",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"+54 11 5042-1226",whatsapp:"+54 11 5042-1226",instagram:"",web:"https://mbtecnic.com/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Service especializado en consolas (PS4/PS5/Xbox Series/Wii/Nintendo) +20 años. Lun-Vie 10-18, Sáb 14-18.",fuente:"mbtecnic.com"},
+{nombre:"Pueyrredón Games & Service",tipo:"Mixto",direccion:"Av. Nazca 4475",barrio:"Villa del Parque / Villa Urquiza",zona:"CABA-Oeste/Sur",telefono:"+54 11 3526-4976",whatsapp:"+54 11 3526-4976",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Venta de consolas + service de consolas/PC/notebooks + insumos. FB: PueyrredonGames.",fuente:"near-place.com; FB"},
+{nombre:"GameSolution Service",tipo:"Reparación",direccion:"Parque Patricios (verificar calle; figura Alberti 1735)",barrio:"Parque Patricios",zona:"CABA-Oeste/Sur",telefono:"+54 11 5338-3001",whatsapp:"",instagram:"@gamesolution.service",web:"https://gamesolutionservice.com.ar/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Service especializado en consolas desde 2004. Verificar dirección exacta.",fuente:"gamesolutionservice.com.ar"},
+{nombre:"Necxus",tipo:"Mixto",direccion:"Melincué 3929",barrio:"Villa Devoto",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"https://www.necxus.com.ar/",email:"rma@necxus.com.ar",hace_reparaciones:"Sí",notas:"Electrónica/informática con consolas y videojuegos + soporte técnico (RMA). Más PC que gaming. Lun-Vie 9-18, Sáb 10-13.",fuente:"necxus.com.ar"},
+{nombre:"JotaPlay Mayorista",tipo:"Importación",direccion:"Sarmiento 2284",barrio:"Balvanera (Once)",zona:"CABA-Oeste/Sur",telefono:"+54 11 5126-6600",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"No",notas:"Mayorista/distribuidor de videojuegos en Once. Interés B2B como canal/comparable, no comprador de repuestos.",fuente:"puntoclick.com.ar"},
+{nombre:"Distribuidora Javi",tipo:"Importación",direccion:"Pasteur 346, Local 14 (Galería Pasteur)",barrio:"Balvanera (Once)",zona:"CABA-Oeste/Sur",telefono:"+54 11 4954-1298",whatsapp:"",instagram:"",web:"http://distribuidorajavi.com.ar",email:"",hace_reparaciones:"No",notas:"Mayorista de videojuegos en Galería Pasteur (Once). Canal B2B.",fuente:"distribuidorajavi.com.ar"},
+{nombre:"For Gamers (FG Store)",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 6743, Local 70Y",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"https://www.fgstore.com.ar/",email:"",hace_reparaciones:"?",notas:"Local de videojuegos/consolas en galería de Flores. Confirmar contacto directo.",fuente:"fgstore.com.ar"},
+{nombre:"Squirtle Play",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 6743",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en galería de Flores. Datos de contacto no verificados.",fuente:"puntoclick.com.ar"},
+{nombre:"Videoconsolas",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 7055, Local 21",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"@videoconsolasonline",web:"",email:"",hace_reparaciones:"?",notas:"Local de consolas/videojuegos en Flores. IG tentativo a confirmar.",fuente:"puntoclick.com.ar"},
+{nombre:"Kamexa",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 6836",barrio:"Flores",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Flores. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"CYDGames Video Games",tipo:"Consolas/Juegos",direccion:"Gral. Venancio Flores 3643",barrio:"Floresta",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Flores/Floresta. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Estación Play",tipo:"Consolas/Juegos",direccion:"Guaminí 4961",barrio:"Villa Riachuelo",zona:"CABA-Oeste/Sur",telefono:"+54 11 6237-6937",whatsapp:"+54 11 6237-6937",instagram:"",web:"https://estacionplay.com/",email:"",hace_reparaciones:"?",notas:"Consolas PS4/PS5, joysticks y accesorios; +12 años. Suroeste de CABA.",fuente:"estacionplay.com"},
+{nombre:"Buenos Aires Gamers",tipo:"Consolas/Juegos",direccion:"Av. Olivera 1561",barrio:"Mataderos",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Mataderos. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Alberdi Games 2019",tipo:"Consolas/Juegos",direccion:"Av. Juan Bautista Alberdi 6923",barrio:"Mataderos",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos sobre J.B. Alberdi (corredor con varios locales). Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Start Game",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 11450, Local 22 (Galería Liniers)",barrio:"Liniers",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local en Galería Liniers. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Virtual Play",tipo:"Consolas/Juegos",direccion:"Cnel. Ramón L. Falcón 7035, Local 79 (Galería Crédito Liniers)",barrio:"Liniers",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local en Galería Crédito Liniers. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Gangagram",tipo:"Consolas/Juegos",direccion:"Guatemala 5731 PB",barrio:"Villa Crespo / Palermo",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Consolas usadas: PS5/PS4/Xbox/Wii/DS/Switch. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Tienda Xbox One Almagro",tipo:"Consolas/Juegos",direccion:"Av. Dr. Honorio Pueyrredón 1148",barrio:"Almagro / Caballito",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local enfocado en Xbox. Confirmar nombre comercial y contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"Playtec Games",tipo:"Consolas/Juegos",direccion:"Miravé 3060",barrio:"Barracas / Pompeya",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Aparece en directorios de Barracas/Parque Patricios. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+{nombre:"TradeGames",tipo:"Consolas/Juegos",direccion:"Av. Entre Ríos 662",barrio:"Balvanera / Constitución",zona:"CABA-Oeste/Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Compra/venta/canje de videojuegos sobre Entre Ríos. Confirmar contacto.",fuente:"puntoclick.com.ar"},
+// ---------- CABA NORTE (Belgrano / Palermo / Villa Urquiza) ----------
+{nombre:"Flash4Games",tipo:"Reparación",direccion:"Av. Cabildo 2370, Local 18 (Galería Río de Janeiro)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 3360-2245",whatsapp:"+54 11 3360-2245",instagram:"@flash4gamesbelgrano",web:"https://flash4games.com.ar/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO MUY VALIOSO. Service exclusivo (no venta): PS4/PS5/Xbox/Switch, joysticks (drift), HDMI, microsoldadura, fuentes. Lun-Sáb 11-18.",fuente:"flash4games.com.ar"},
+{nombre:"ESN Games",tipo:"Reparación",direccion:"Av. Juramento 1669, Local 11",barrio:"Belgrano",zona:"CABA-Norte",telefono:"(011) 4781-6259",whatsapp:"",instagram:"",web:"http://esngames.com.ar/",email:"soporte@esngames.com.ar",hace_reparaciones:"Sí",notas:"PROSPECTO MUY VALIOSO. Laboratorio propio +20 años reparando consolas (PS/Wii/Xbox/GameCube): BIOS, joysticks, lectoras.",fuente:"esngames.com.ar"},
+{nombre:"Go Reparaciones",tipo:"Reparación",direccion:"Av. Cramer 1941, 1° piso B",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 6027-7683",whatsapp:"+54 11 6027-7683",instagram:"@goreparaciones",web:"https://goreparaciones.com.ar/",email:"fmesser2008@hotmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO MUY VALIOSO. +20 años, +60.000 reparaciones. PS1-PS5, Xbox 360/One/Series, Switch, notebooks.",fuente:"goreparaciones.com.ar"},
+{nombre:"GameSolutions Argentina",tipo:"Reparación",direccion:"Zapiola 1989",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 2619-7082",whatsapp:"+54 11 6413-1280",instagram:"@gamesolutionsargentina",web:"https://gamesolutions.com.ar/",email:"info@gamesolutions.com.ar",hace_reparaciones:"Sí",notas:"Reparación de consolas + venta de accesorios. Presupuesto sin cargo. OJO dirección inconsistente entre fuentes (verificar).",fuente:"gamesolutions.com.ar"},
+{nombre:"SuperService SRL",tipo:"Reparación",direccion:"Av. Álvarez Thomas 1140",barrio:"Colegiales",zona:"CABA-Norte",telefono:"011 4551-4496",whatsapp:"+54 11 3649-1251",instagram:"",web:"https://www.superservicesrl.com.ar/service-consolas.htm",email:"info@superservicesrl.com.ar",hace_reparaciones:"Sí",notas:"Service de consolas con repuestos originales, presupuesto gratis. Lun-Vie 9:30-13 y 14-18.",fuente:"superservicesrl.com.ar"},
+{nombre:"Super Retro Land",tipo:"Retro",direccion:"Av. Cabildo 2370, Local 90 (repuestos) y 15 (juegos) (Galería Río de Janeiro)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 2567-2535",whatsapp:"",instagram:"@superretrolandar",web:"https://www.superretroland.com.ar/",email:"",hace_reparaciones:"?",notas:"Tienda retro con LOCAL DE REPUESTOS propio (Local 90). ~31K seg. IG. Posible comprador. Lun-Vie 14-18.",fuente:"superretroland.com.ar"},
+{nombre:"Game On",tipo:"Retro",direccion:"Av. Cabildo 2422, Local 20",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 7368-5997",whatsapp:"",instagram:"@gameonargentina",web:"https://www.gameonretro.com.ar/",email:"",hace_reparaciones:"?",notas:"Se autodefine el local más completo de retrogaming de Argentina. Envíos a todo el país.",fuente:"gameonretro.com.ar"},
+{nombre:"Soy Gamer Belgrano",tipo:"Consolas/Juegos",direccion:"Av. Cabildo 2852 (+ suc. Cabildo 2040, Local 99)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"(011) 4541-4807",whatsapp:"(011) 2547-8410",instagram:"",web:"https://www.soygamerargentina.com/",email:"belgrano@soygamerargentina.com",hace_reparaciones:"?",notas:"Cadena. Consolas/juegos/accesorios PS3/PS4/Switch/Xbox. Lun-Sáb 10-20.",fuente:"soygamerargentina.com"},
+{nombre:"VIDEOGAMERS",tipo:"Consolas/Juegos",direccion:"Av. Cabildo 2280, Local 30 y 7 (Galería Río de la Plata)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"11 3598-2686",whatsapp:"11 3598-2686",instagram:"@videogamers_ok",web:"https://videogamers.com.ar/",email:"contacto@videogamers.com.ar",hace_reparaciones:"No",notas:"Negocio familiar, videojuegos nuevos/usados, consolas, accesorios y electrónica. Sin service. Suc. en Echeverría 2578 L.3.",fuente:"videogamers.com.ar"},
+{nombre:"Electronic Things",tipo:"Mixto",direccion:"Av. Cabildo 2280, Local 30",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"+54 11 6027-7099",instagram:"@electronicthingsok",web:"https://electronicthings.com.ar/",email:"info@et.com.ar",hace_reparaciones:"No",notas:"Consolas actuales (PS5, Switch 2, Xbox Series, Steam Deck) + retro + accesorios y MicroSD. Vende retro = posible comprador. Lun-Sáb 11-19.",fuente:"electronicthings.com.ar"},
+{nombre:"E11even Games",tipo:"Consolas/Juegos",direccion:"Av. Juramento 1663",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 3940-9061",whatsapp:"+54 11 3940-9061",instagram:"@elevengames.ar",web:"https://elevengamesar.com/",email:"ventas@e11evengames.com",hace_reparaciones:"No",notas:"Consolas y accesorios (PS/Xbox/Nintendo), Pokémon TCG, PC gaming. Otra suc. en Lanús.",fuente:"elevengamesar.com"},
+{nombre:"Game Suite (GS Video Games)",tipo:"Consolas/Juegos",direccion:"Av. Cabildo 2280, Local 24 (Galería Río de la Plata)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 4785-6605",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Venta de videojuegos, consolas y accesorios.",fuente:"argentino.com.ar"},
+{nombre:"DataGames",tipo:"Consolas/Juegos",direccion:"Av. Cabildo 2280, Local 28",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"@datagamesvideojuegos",web:"",email:"",hace_reparaciones:"?",notas:"Consolas, juegos y accesorios en Galería Río de la Plata.",fuente:"puntoclick.com.ar"},
+{nombre:"Froggy Market",tipo:"Mixto",direccion:"Av. Cabildo 2350, Local 51 (Galería Marga)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"+54 11 5753-8656",whatsapp:"+54 11 5753-8656",instagram:"@froggymarket",web:"https://froggymarket.com.ar/",email:"info@froggymarket.com.ar",hace_reparaciones:"?",notas:"Consolas, juegos, accesorios + hardware/periféricos PC gaming. Mar-Sáb 12-18. Envíos.",fuente:"froggymarket.com.ar"},
+{nombre:"Dakmor's Club",tipo:"Consolas/Juegos",direccion:"Echeverría 1446, Local 32",barrio:"Belgrano",zona:"CABA-Norte",telefono:"011 4783-8284",whatsapp:"",instagram:"",web:"https://www.dakmorsclub.com/",email:"",hace_reparaciones:"?",notas:"Compra/venta/canje de juegos y consolas (Switch, PS4, etc.).",fuente:"dakmorsclub.com"},
+{nombre:"XStation",tipo:"Consolas/Juegos",direccion:"Echeverría 1442, Local 6",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"+54 9 11 3050-1992",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Compra/venta de juegos y consolas + coleccionables PS/Xbox. FB: XStationARG.",fuente:"facebook.com/XStationARG"},
+{nombre:"LM Games",tipo:"Consolas/Juegos",direccion:"Av. Cabildo 2450, Local 24",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Venta de consolas y juegos. Contacto sin verificar.",fuente:"puntoclick.com.ar"},
+{nombre:"Games Consolas",tipo:"Reparación",direccion:"Av. Cabildo 2350, Local 9 (Galería Marga)",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Listado como especializado en reparación de consolas. Contacto no publicado. Verificar.",fuente:"redargentina.com.ar"},
+{nombre:"Srudov",tipo:"Consolas/Juegos",direccion:"Vuelta de Obligado 2369",barrio:"Belgrano",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos/consolas. Sin contacto verificado.",fuente:"puntoclick.com.ar"},
+{nombre:"Nakama Retro Store",tipo:"Retro",direccion:"",barrio:"Palermo / Recoleta",zona:"CABA-Norte",telefono:"",whatsapp:"+54 11 3638-1924",instagram:"@nakamaretrostore",web:"https://www.nakamaretrostore.com.ar/",email:"",hace_reparaciones:"No",notas:"Retro Nintendo/PS/Sega/Xbox + Switch + Pokémon TCG/figuras. Dirección no publicada. Envíos a todo el país.",fuente:"nakamaretrostore.com.ar"},
+{nombre:"Estado Gamer",tipo:"Mixto",direccion:"Francisco Acuña de Figueroa 1042, Piso 2",barrio:"Palermo",zona:"CABA-Norte",telefono:"+54 9 11 3620-2473",whatsapp:"+54 9 11 3620-2473",instagram:"@estadogamer.com.ar",web:"https://estadogamer.com.ar/",email:"estadogamer.info@gmail.com",hace_reparaciones:"No",notas:"Consolas estándar + portátiles retro (Anbernic, Steam, Miyoo, Retroid) + VR + retro. Online/cita.",fuente:"estadogamer.com.ar"},
+{nombre:"GAMESHOP SRL",tipo:"Mixto",direccion:"Av. de los Incas 4552",barrio:"Villa Urquiza",zona:"CABA-Norte",telefono:"4524-1609",whatsapp:"",instagram:"",web:"https://www.gameservice.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Equipo técnico que repara consolas (además de PC/notebooks/impresoras). Prospecto potencial.",fuente:"gameservice.com.ar"},
+{nombre:"Sonic Villa Urquiza",tipo:"Consolas/Juegos",direccion:"Av. Triunvirato 4548, Local 3",barrio:"Villa Urquiza",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos/consolas. Sin contacto verificado.",fuente:"puntoclick.com.ar"},
+{nombre:"Malibú Tecno",tipo:"Consolas/Juegos",direccion:"Av. Triunvirato 4135",barrio:"Villa Urquiza",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos/consolas. Sin contacto verificado.",fuente:"puntoclick.com.ar"},
+{nombre:"Universo PS3",tipo:"Consolas/Juegos",direccion:"José Pascual Tamborini 5767",barrio:"Villa Urquiza",zona:"CABA-Norte",telefono:"",whatsapp:"",instagram:"",web:"https://universops3-18.mercadoshops.com.ar/",email:"",hace_reparaciones:"?",notas:"Especializado en PlayStation. Sin teléfono verificado.",fuente:"mercadoshops.com.ar"},
+// ---------- GBA SUR (Lomas / Quilmes / Lanús / Avellaneda) ----------
+{nombre:"PC Lomas Gamer",tipo:"Reparación",direccion:"Boedo 236, Locales 38-39 (Galería Nazmi)",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"11 3061-4642",whatsapp:"11 3061-4642",instagram:"@pclomasgamer",web:"https://pclomasgamer.com/",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Desde 2010. Reparación integral PS3/PS4/PS5 y Xbox (pasta térmica, metal líquido, fuentes, HDMI), joysticks (drift), armado PC. +350 reseñas 4.8.",fuente:"pclomasgamer.com"},
+{nombre:"PS3 Larroque",tipo:"Mixto",direccion:"Av. Larroque 1890 (Villa Centenario)",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"11 5942-6818",whatsapp:"11 3523-5603",instagram:"@ps3larroque",web:"https://www.ps3larroque.com.ar/",email:"",hace_reparaciones:"Sí",notas:"Compra/venta/canje (PS3/PS4/PS5, Switch, Xbox), accesorios y reparación de consolas. Suc. en Carrefour Oliden.",fuente:"ps3larroque.com.ar"},
+{nombre:"Hubelam (HBL Tech)",tipo:"Importación",direccion:"Mariano Boedo 373",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"11 4292-8426",whatsapp:"11 15-4076-1895",instagram:"",web:"https://www.hubelam.com.ar/",email:"",hace_reparaciones:"?",notas:"Importadora/fabricante de consolas retro (HBL Tech). Videojuegos, consolas, accesorios. Posible competidor además de prospecto. Lun-Sáb 8:30-20.",fuente:"hubelam.com.ar"},
+{nombre:"Game Store (Lomas)",tipo:"Mixto",direccion:"Av. Hipólito Yrigoyen 9086/9092",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"@gamestore_argentina",web:"https://www.gamestore-shop.com/",email:"",hace_reparaciones:"Sí",notas:"Cadena (shoppings + calle). Videojuegos, consolas PlayStation, accesorios + service de consolas y PC. Verificar tel de la suc.",fuente:"gamestore-shop.com"},
+{nombre:"Next Level Gamer Shop",tipo:"Mixto",direccion:"Mariano Boedo 168, Local 24",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"11 6222-8158",whatsapp:"11 6222-8158",instagram:"@nxl_ok",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos, hardware, armado PC gaming, accesorios PC/PS/Xbox y coleccionables.",fuente:"puntoclick.com.ar"},
+{nombre:"FD Retro",tipo:"Retro",direccion:"Sarmiento 275",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"11 3975-0000",whatsapp:"11 3975-0000",instagram:"@fdretro",web:"",email:"",hace_reparaciones:"?",notas:"Local retro en el centro de Lomas. 4.0/5 (445 reseñas). Verificar si hace service.",fuente:"puntoclick.com.ar"},
+{nombre:"Fast Games",tipo:"Mixto",direccion:"Sarmiento 638, Local 2C (Galería GEN)",barrio:"Quilmes",zona:"GBA-Sur",telefono:"11 4945-4350",whatsapp:"",instagram:"@fastgamesar",web:"https://fastgames.com.ar/",email:"fastgames@outlook.es",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Distribuidor oficial PlayStation/Xbox/Redragon/Logitech. Venta + service: mantenimiento PS4, firmware, disco, HDMI, lector láser.",fuente:"fastgames.com.ar"},
+{nombre:"Zeppelin Games",tipo:"Consolas/Juegos",direccion:"Peatonal Rivadavia 334, Local 6 (Galería Quilcenter)",barrio:"Quilmes",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"@zeppelingames",web:"",email:"",hace_reparaciones:"?",notas:"Consolas, juegos y accesorios PS2-PS4/Xbox/Nintendo, con envíos. Aclaran que NO venden por Marketplace (alertan estafas).",fuente:"argentino.com.ar"},
+{nombre:"Playmania Quilmes",tipo:"Mixto",direccion:"Peatonal Rivadavia 112, Local 18 (Galería Elesgaray)",barrio:"Quilmes",zona:"GBA-Sur",telefono:"",whatsapp:"11 15-3108-1227",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"25 años. Juegos y accesorios para distintas consolas + tecnología y celulares. Lun-Sáb 11-13:30 y 16:30-20.",fuente:"argentino.com.ar"},
+{nombre:"Ready Games",tipo:"Mixto",direccion:"9 de Julio 1558, Local 6/14, Lanús Este",barrio:"Lanús",zona:"GBA-Sur",telefono:"11 5102-5354",whatsapp:"11 5102-5354",instagram:"@readygamesbsas",web:"https://www.readygames.com.ar/",email:"readygamesbsas@gmail.com",hace_reparaciones:"?",notas:"Videojuegos PS/Nintendo, juegos y accesorios. Centro de Lanús Este.",fuente:"readygames.com.ar"},
+{nombre:"Play For Fun (PlayXFun)",tipo:"Mixto",direccion:"9 de Julio 1250, Locales 17 y 25, Lanús Este",barrio:"Lanús",zona:"GBA-Sur",telefono:"",whatsapp:"11 4240-8568",instagram:"",web:"https://www.playxfun.com/",email:"pxf@playxfun.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. L.17 venta/canje; L.25 reparación de consolas y joysticks (service WhatsApp 11 2708-9477). +180k IG.",fuente:"playxfun.com"},
+{nombre:"Todo Consolas Lanús",tipo:"Reparación",direccion:"Av. 9 de Julio 1565",barrio:"Lanús",zona:"GBA-Sur",telefono:"11 5853-8326",whatsapp:"11 5853-8326",instagram:"@todoconsolas.lanus",web:"",email:"todoconsolaslanus@hotmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Service especializado en reparación de consolas y venta.",fuente:"paginasamarillas.com.ar"},
+{nombre:"Tecnomas Lanús",tipo:"Consolas/Juegos",direccion:"Lanús Este (confirmar dirección)",barrio:"Lanús",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"https://www.tecnomaslanus.com.ar/",email:"",hace_reparaciones:"?",notas:"Tienda de consolas y videojuegos (también online). FB: tecnomaslanus.",fuente:"tecnomaslanus.com.ar"},
+{nombre:"Game On Techno Store",tipo:"Mixto",direccion:"Diagonal Brown 1237",barrio:"Adrogué",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Videojuegos, consolas y accesorios + service de PC/notebooks. Entrega a domicilio. Tel parcial (confirmar).",fuente:"argentino.com.ar"},
+{nombre:"Soy Gamer Berazategui",tipo:"Mixto",direccion:"Berazategui (sucursal, confirmar dirección)",barrio:"Berazategui",zona:"GBA-Sur",telefono:"11 7726-1223",whatsapp:"11 4067-6236",instagram:"@soygamerargentina",web:"https://www.soygamerargentina.com/",email:"berazategui@soygamerargentina.com",hace_reparaciones:"?",notas:"Cadena (compra/venta/usados), suc. Berazategui. Lun-Sáb 10-20.",fuente:"soygamerargentina.com"},
+{nombre:"Varelaplay",tipo:"Consolas/Juegos",direccion:"Florencio Varela (confirmar dirección)",barrio:"Florencio Varela",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Tienda de juegos: consolas usadas, juegos PlayStation, con envíos. Dirección/tel a confirmar.",fuente:"comercios.pro; OLX"},
+{nombre:"Mini Retro Arcade",tipo:"Retro",direccion:"Guaminí 5799",barrio:"Wilde (Avellaneda)",zona:"GBA-Sur",telefono:"11 6788-7264",whatsapp:"11 6788-7264",instagram:"",web:"https://linktr.ee/miniretro",email:"",hace_reparaciones:"?",notas:"Local de videojuegos retro en Wilde. 4.0/5 (448 reseñas). Verificar si hace service.",fuente:"puntoclick.com.ar"},
+{nombre:"Juegos para Plays",tipo:"Consolas/Juegos",direccion:"Gral. Juan Lavalle 46",barrio:"Avellaneda",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Juegos para PlayStation y videojuegos en el centro de Avellaneda. Contacto a confirmar.",fuente:"argentino.com.ar"},
+{nombre:"INFOGAME",tipo:"Consolas/Juegos",direccion:"Mariano Boedo 342",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos sobre Mariano Boedo (polo gamer de Lomas). Contacto a confirmar.",fuente:"puntoclick.com.ar"},
+{nombre:"RUNFLA Juegos",tipo:"Consolas/Juegos",direccion:"Francisco Portela 320",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Lomas. Contacto a confirmar.",fuente:"puntoclick.com.ar"},
+{nombre:"Galaxy Games (Lomas)",tipo:"Consolas/Juegos",direccion:"Guillermo Enrique Hudson 2705",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"OJO: puede ser salón de arcades más que retail/service. Verificar antes de prospectar.",fuente:"puntoclick.com.ar"},
+{nombre:"Lomas 4G / Family Game",tipo:"Consolas/Juegos",direccion:"Italia 26",barrio:"Lomas de Zamora",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Dos comercios de videojuegos en la misma dirección. Contacto a confirmar.",fuente:"puntoclick.com.ar"},
+{nombre:"Service de consolas Quilmes Oeste (s/nombre)",tipo:"Reparación",direccion:"Liniers 1841, Quilmes Oeste",barrio:"Quilmes",zona:"GBA-Sur",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Service: repara LCD/TV, monitores, consolas PlayStation, audio, DVD. Nombre comercial no publicado. Tel parcial. Verificar.",fuente:"argentino.com.ar"},
+// ---------- GBA OESTE (Morón / Ramos Mejía / Castelar / La Matanza) ----------
+{nombre:"Game Center",tipo:"Mixto",direccion:"Almte. Guillermo Brown 871, Local 26",barrio:"Morón",zona:"GBA-Oeste",telefono:"+54 11 8031-3999",whatsapp:"+54 9 11 8031-3999",instagram:"@gamecenter.ok",web:"https://gamecenterok.com",email:"gamecenterok18@gmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Consolas PS5/PS4/Switch/Xbox nuevas/usadas/reacond.; toma usados; service propio de consolas y joysticks. 4.9 (+1200 reseñas).",fuente:"gamecenterok.com"},
+{nombre:"Virtual House",tipo:"Mixto",direccion:"Av. Eva Perón 380",barrio:"Ramos Mejía",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"@virtualhouse.ramosmejia",web:"https://virtualhouse.com.ar",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Desde 2008. Consolas (PS2-PS3/PSP/Wii/Xbox360/Sega/DS), accesorios, hardware PC; service propio de consolas/PC/notebooks; presupuesto sin cargo.",fuente:"virtualhouse.com.ar"},
+{nombre:"Orange Game",tipo:"Mixto",direccion:"Cnel. Martín Irigoyen 492 PB",barrio:"Castelar",zona:"GBA-Oeste",telefono:"+54 11 5431-4498",whatsapp:"",instagram:"",web:"https://orangegame.com.ar",email:"",hace_reparaciones:"?",notas:"20 años. Videojuegos, computación y electrónica (probable service). Lun-Vie 10-19:30, Sáb 10-13:30.",fuente:"orangegame.com.ar"},
+{nombre:"Supra Games",tipo:"Reparación",direccion:"Corrientes 3397",barrio:"Castelar",zona:"GBA-Oeste",telefono:"+54 11 3136-5469",whatsapp:"",instagram:"@supragames_",web:"https://supragamesmoron.wixsite.com/supragames",email:"supragamesmoron@gmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Soporte técnico / reparación de joysticks PS4 y consolas.",fuente:"supragamesmoron.wixsite.com"},
+{nombre:"Nitro Games",tipo:"Mixto",direccion:"Av. Rivadavia 18184",barrio:"Morón",zona:"GBA-Oeste",telefono:"+54 11 4483-0993",whatsapp:"",instagram:"",web:"https://www.nitrogames.com.ar",email:"",hace_reparaciones:"?",notas:"+20 años. Videojuegos, consolas, joysticks, accesorios, audio. A una cuadra de la estación de Morón.",fuente:"nitrogames.com.ar"},
+{nombre:"Cybergames GameStore",tipo:"Mixto",direccion:"(Padua / Merlo / Ituzaingó - confirmar)",barrio:"San Antonio de Padua",zona:"GBA-Oeste",telefono:"+54 11 6620-3390",whatsapp:"+54 9 11 6620-3390",instagram:"@cybergamesgamestore",web:"",email:"cyber654@hotmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. +15 años. Locales en Padua, Merlo e Ituzaingó. Juegos, figuras, Funko; service y mantenimiento de consolas. Direcciones a confirmar.",fuente:"IG @cybergamesgamestore"},
+{nombre:"Gamers Ituzaingó",tipo:"Mixto",direccion:"(s/dir publicada)",barrio:"Ituzaingó",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Juegos y accesorios PS2-PS4/Xbox360 + reparación de consolas. Solo FB (gamersituzaingo). Verificar por Maps.",fuente:"facebook.com/gamersituzaingo"},
+{nombre:"Tecnicfmf",tipo:"Reparación",direccion:"(Ramos Mejía / La Matanza - confirmar)",barrio:"Ramos Mejía",zona:"GBA-Oeste",telefono:"+54 9 11 6415-7739",whatsapp:"+54 9 11 6415-7739",instagram:"@tecnicfmf",web:"",email:"facundofabiano2002@gmail.com",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Servicio técnico de consolas y VENTA DE REPUESTOS PS4.",fuente:"IG @tecnicfmf"},
+{nombre:"Homero 2 Computación",tipo:"Reparación",direccion:"Dolores de Huici 3301",barrio:"Hurlingham",zona:"GBA-Oeste",telefono:"+54 11 4452-0513",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Reparación de PC/notebooks/consolas; hardware, recarga de cartuchos y accesorios gamer.",fuente:"cercanooeste.com"},
+{nombre:"Gameboy Collectors",tipo:"Retro",direccion:"Avellaneda 497",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"@gameboycollectorsarg",web:"https://gameboycollectors.com.ar",email:"ventas@gameboycollectors.com.ar",hace_reparaciones:"?",notas:"Videojuegos y consolas retro/colección. Local en Morón.",fuente:"gameboycollectors.com.ar"},
+{nombre:"Gaming City Morón",tipo:"Consolas/Juegos",direccion:"Av. Rivadavia 17939",barrio:"Morón",zona:"GBA-Oeste",telefono:"+54 9 11 6155-4946",whatsapp:"+54 9 11 6155-4946",instagram:"",web:"https://www.gamingcity.com.ar",email:"",hace_reparaciones:"?",notas:"Casa central de la cadena Gaming City. PC gamer, consolas, juegos, accesorios. Cadena grande (menor prioridad).",fuente:"gamingcity.com.ar"},
+{nombre:"Gaming City Merlo",tipo:"Consolas/Juegos",direccion:"Suipacha 509",barrio:"Merlo",zona:"GBA-Oeste",telefono:"+54 9 11 4161-3209",whatsapp:"+54 9 11 4161-3209",instagram:"",web:"https://www.gamingcity.com.ar",email:"",hace_reparaciones:"?",notas:"Suc. Merlo de la cadena Gaming City.",fuente:"gamingcity.com.ar"},
+{nombre:"Gamers (juegos y consolas)",tipo:"Mixto",direccion:"(s/dir publicada)",barrio:"Ramos Mejía",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Local de videojuegos con servicio técnico. +4300 likes. Solo FB (gamers.juegos.consolas). Verificar por Maps.",fuente:"facebook.com/gamers.juegos.consolas"},
+{nombre:"Stay Gaming",tipo:"Consolas/Juegos",direccion:"(s/dir publicada)",barrio:"Ituzaingó",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"@staygaming.store",web:"",email:"",hace_reparaciones:"?",notas:"Tienda gamer en Ituzaingó. Dirección/tel no publicados. Verificar por IG/Maps.",fuente:"IG @staygaming.store"},
+{nombre:"Royal Games",tipo:"Consolas/Juegos",direccion:"Cacique Coliqueo 1041",barrio:"Haedo",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Haedo (directorio, sin contacto). Verificar por Maps.",fuente:"lazonaoeste.com"},
+{nombre:"Brinstar",tipo:"Consolas/Juegos",direccion:"Ntra. Sra. del Buen Viaje 1079",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Morón centro. Nombre sugiere retro. Verificar.",fuente:"lazonaoeste.com"},
+{nombre:"Nirvana Juegos",tipo:"Consolas/Juegos",direccion:"Gral. Luis María Campos 1374",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Morón. Contacto no confirmado.",fuente:"lazonaoeste.com"},
+{nombre:"NFGTech",tipo:"Mixto",direccion:"Gral. Bartolomé Mitre 45",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Tech/gaming en Morón. Nombre sugiere tecnología/service. Verificar.",fuente:"lazonaoeste.com"},
+{nombre:"Compra y venta Playstation",tipo:"Consolas/Juegos",direccion:"Av. Eva Perón 2320",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Compra-venta de PlayStation en Morón. Contacto no confirmado.",fuente:"lazonaoeste.com"},
+{nombre:"Más Mercurio",tipo:"Consolas/Juegos",direccion:"25 de Mayo 473, 2H",barrio:"Morón",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Listado como videojuegos en Morón. Verificar rubro/contacto.",fuente:"lazonaoeste.com"},
+{nombre:"Dártagnan",tipo:"Consolas/Juegos",direccion:"Dr. Ignacio Arieta 3147",barrio:"San Justo",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos/regalería en San Justo + presencia en MercadoLibre. Verificar.",fuente:"puntoclick.com.ar"},
+{nombre:"CD Market San Justo",tipo:"Consolas/Juegos",direccion:"Av. Brig. Gral. J.M. de Rosas 3910 (San Justo Shopping)",barrio:"San Justo",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"https://www.cdmarket.com.ar",email:"",hace_reparaciones:"No",notas:"Suc. de cadena CD Market en San Justo Shopping. Cadena grande (menor prioridad B2B).",fuente:"cdmarket.com.ar"},
+{nombre:"PSLiderStore",tipo:"Consolas/Juegos",direccion:"Zapiola 2971",barrio:"San Justo",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos/PlayStation en San Justo. Contacto no confirmado.",fuente:"puntoclick.com.ar"},
+{nombre:"PS4 Games San Justo",tipo:"Consolas/Juegos",direccion:"Dr. Enrique Eizaguirre 364",barrio:"Lomas del Mirador",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos/PS4 en Lomas del Mirador. Contacto no confirmado.",fuente:"puntoclick.com.ar"},
+{nombre:"REPLAY",tipo:"Consolas/Juegos",direccion:"Garibaldi (Villa Luzuriaga)",barrio:"Villa Luzuriaga",zona:"GBA-Oeste",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos en Villa Luzuriaga. Nombre sugiere retro/usados. Verificar.",fuente:"puntoclick.com.ar"},
+{nombre:"Creepshop Castelar",tipo:"Mixto",direccion:"Avellaneda 971",barrio:"Castelar",zona:"GBA-Oeste",telefono:"+54 11 3121-0592",whatsapp:"+54 11 3121-0592",instagram:"@creepshopcastelar",web:"https://creepshop.com.ar",email:"",hace_reparaciones:"No",notas:"Manga, TCG, juegos de mesa, comics, juguetes y consolas. Más hobby/colección. Lun-Vie 16-20:30, Sáb 10-20:30.",fuente:"creepshop.com.ar"},
+// ---------- GBA NORTE (San Isidro / Martínez / Vicente López / Tigre / San Martín) ----------
+{nombre:"ReadyGo Videojuegos",tipo:"Mixto",direccion:"Gral. Manuel Belgrano 126, Local 3 (Galería Belgrano)",barrio:"San Isidro",zona:"GBA-Norte",telefono:"011 4742-5505",whatsapp:"",instagram:"@readygoweb",web:"https://readygoweb.com.ar",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Consolas, juegos, accesorios y juguetes + service de consolas y PC (+20 años).",fuente:"readygoweb.com.ar"},
+{nombre:"Game's Village",tipo:"Mixto",direccion:"Gral. Manuel Belgrano 333, Local 21 (Galería Queen's Village)",barrio:"San Isidro",zona:"GBA-Norte",telefono:"011 5826-3936",whatsapp:"011 5826-3936",instagram:"@games.village",web:"",email:"info.gamesvillage@gmail.com",hace_reparaciones:"?",notas:"Videojuegos, consolas, compra/venta/canje, figuras 3D, coleccionables y accesorios. Lun-Sáb 12-19.",fuente:"puntoclick.com.ar"},
+{nombre:"Insert Coin San Isidro",tipo:"Mixto",direccion:"Monseñor Alberti 1060",barrio:"San Isidro",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"@insert_coin_sanisidro",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en San Isidro (FB e IG activos). No confundir con Insert Coin Retro Game (arcades).",fuente:"puntoclick.com.ar"},
+{nombre:"Gaming City San Isidro",tipo:"Consolas/Juegos",direccion:"Av. Centenario 239",barrio:"San Isidro",zona:"GBA-Norte",telefono:"011 7637-5901",whatsapp:"011 7637-5901",instagram:"@gamingcitysanisidro",web:"https://www.gamingcity.com.ar",email:"",hace_reparaciones:"?",notas:"Suc. de cadena Gaming City. Consolas, PC gamer, periféricos. Lun-Vie 10:30-19, Sáb 10:30-15.",fuente:"puntoclick.com.ar"},
+{nombre:"PlayKing",tipo:"Consolas/Juegos",direccion:"Albarellos 876",barrio:"San Isidro",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en San Isidro (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"Rylon Studio",tipo:"Consolas/Juegos",direccion:"Don Bosco 1600",barrio:"San Isidro",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos zona San Isidro/Tigre.",fuente:"puntoclick.com.ar"},
+{nombre:"Enredados Games",tipo:"Consolas/Juegos",direccion:"Av. Centenario 608",barrio:"San Isidro",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en San Isidro (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"KATANA Videogames / Animé",tipo:"Mixto",direccion:"Gral. Manuel Belgrano 77, Of. 6",barrio:"San Isidro",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos y anime (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"Pixeles Juegos",tipo:"Mixto",direccion:"Juan B. Justo 188",barrio:"Beccar",zona:"GBA-Norte",telefono:"",whatsapp:"11 6982-1108",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Videojuegos, consolas, computación, accesorios, celulares y juguetes. Lun-Sáb 10-19:30. FB: Pixeles Juegos.",fuente:"puntoclick.com.ar"},
+{nombre:"Planet Games",tipo:"Mixto",direccion:"Diag. Salta 802",barrio:"Martínez",zona:"GBA-Norte",telefono:"011 4792-1951",whatsapp:"011 4792-1951",instagram:"@planetgamesmtz",web:"",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Venta de consolas, juegos y accesorios + servicio técnico de reparación.",fuente:"puntoclick.com.ar"},
+{nombre:"The Geek Spot (Unicenter)",tipo:"Consolas/Juegos",direccion:"Unicenter Shopping, Paraná 3745",barrio:"Martínez",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"@thegeekspotar",web:"https://geekspot.com.ar",email:"",hace_reparaciones:"?",notas:"Local en Unicenter: consolas, joysticks, juegos y accesorios. Otra suc. en DOT (CABA).",fuente:"geekspot.com.ar"},
+{nombre:"Gaming City (Unicenter)",tipo:"Consolas/Juegos",direccion:"Unicenter Nivel 3, Paraná 3745",barrio:"Martínez",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"@gamingcityunicenter",web:"https://www.gamingcity.com.ar",email:"",hace_reparaciones:"?",notas:"Suc. Unicenter de la cadena Gaming City. Consolas (PS5), PC gamer, periféricos. Todos los días 10-22.",fuente:"gamingcity.com.ar"},
+{nombre:"Dominaria Comics",tipo:"Mixto",direccion:"Av. Maipú 1194/1212",barrio:"Vicente López",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"@dominariacomics",web:"",email:"",hace_reparaciones:"No",notas:"Videojuegos, comics, figuras, Star Wars. Orientada a colección pero vende videojuegos. Lun-Sáb 11-19.",fuente:"puntoclick.com.ar"},
+{nombre:"niknak Imports",tipo:"Importación",direccion:"Av. Maipú 1856",barrio:"Florida (Vicente López)",zona:"GBA-Norte",telefono:"011 2179-4876",whatsapp:"011 2179-4876",instagram:"@niknakimports",web:"",email:"",hace_reparaciones:"No",notas:"Importador: PS5, Xbox Series X, Meta Quest, Apple. Equipos sellados con garantía. Posible canal mayorista.",fuente:"puntoclick.com.ar"},
+{nombre:"Compunorte (Playstation en Olivos)",tipo:"Mixto",direccion:"Gdor. Marcelino Ugarte 2299",barrio:"Olivos",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Computación + PlayStation + Xbox + equipos PC. Teléfono parcial en directorios (verificar).",fuente:"argentino.com.ar"},
+{nombre:"Fix Games / VideoGames Fix",tipo:"Reparación",direccion:"Vélez Sársfield 4992 (o 5015)",barrio:"Munro",zona:"GBA-Norte",telefono:"011 6840-7798",whatsapp:"011 6840-7798",instagram:"@videogamesfix",web:"",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Servicio técnico de reparación de consolas.",fuente:"cylex.com.ar"},
+{nombre:"Repair Store",tipo:"Reparación",direccion:"Alvear 2643, Local 8",barrio:"Villa Ballester (San Martín)",zona:"GBA-Norte",telefono:"+54 9 11 6470-0768",whatsapp:"+54 9 11 6470-0768",instagram:"@repairstoreok",web:"https://repairstore.com.ar",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO MUY FUERTE. Reparación de consolas, drift, mods; VENDE REPUESTOS (potes, membranas, sticks, botones, pantallas, conectores). Posible cliente y a la vez competidor. Lun-Sáb 10-18.",fuente:"repairstore.com.ar"},
+{nombre:"SsdCompus",tipo:"Reparación",direccion:"(s/dir publicada)",barrio:"Villa Ballester (San Martín)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Service de PC + reparación de consolas PS3/PS4/Xbox y joysticks. FB: SSDCOMPUS. Dirección no publicada.",fuente:"facebook.com/SSDCOMPUS"},
+{nombre:"Servicio Técnico Oficial de Consolas (Zona Norte)",tipo:"Reparación",direccion:"Rodríguez Peña 5101",barrio:"Villa Lynch (San Martín)",zona:"GBA-Norte",telefono:"4859-6090",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"PROSPECTO FUERTE. Service PS2/PS3/PS4, Xbox 360, Wii, PSP: flasheo, chip, cambio de láser. Laboratorio propio y repuestos.",fuente:"argentino.com.ar"},
+{nombre:"Jorgito Games",tipo:"Consolas/Juegos",direccion:"Deán Funes 400",barrio:"Boulogne",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Boulogne. FB: Jorgito Games (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"Music Game",tipo:"Mixto",direccion:"Av. Avellaneda 1723",barrio:"Virreyes (San Fernando)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Virreyes (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"The Black Game",tipo:"Mixto",direccion:"Constitución 102",barrio:"San Fernando",zona:"GBA-Norte",telefono:"011 4890-1582",whatsapp:"",instagram:"@theblackgameok",web:"",email:"",hace_reparaciones:"Sí",notas:"Venta de consolas y juegos (PS2/PS3/Wii y actuales) + servicio técnico.",fuente:"puntoclick.com.ar"},
+{nombre:"Lucky Seven",tipo:"Consolas/Juegos",direccion:"Adolfo Alsina 1159",barrio:"San Fernando",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en San Fernando (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"R.P.G SRL",tipo:"Consolas/Juegos",direccion:"Henry Dunant 1475",barrio:"San Fernando",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en San Fernando (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"FUNPARK",tipo:"Consolas/Juegos",direccion:"Gral. Bartolomé Mitre 420",barrio:"Tigre",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en el centro de Tigre.",fuente:"puntoclick.com.ar"},
+{nombre:"MÊLÉE Juegos y Entretenimiento",tipo:"Mixto",direccion:"Pedro Guareschi 22, Local 125",barrio:"Tigre",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Juegos y entretenimiento en Tigre.",fuente:"puntoclick.com.ar"},
+{nombre:"X Game",tipo:"Mixto",direccion:"Av. Hipólito Yrigoyen 930",barrio:"General Pacheco (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en General Pacheco (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"Game Over Pacheco",tipo:"Mixto",direccion:"Av. Hipólito Yrigoyen 307/309",barrio:"General Pacheco (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Consolas, juegos, accesorios, juguetería + servicio técnico. FB: gameoverzipa. Tel parcial (verificar).",fuente:"argentino.com.ar"},
+{nombre:"Flasheo de Consolas",tipo:"Reparación",direccion:"Tucumán 1043",barrio:"General Pacheco (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"Sí",notas:"Service/flasheo de consolas en General Pacheco (con WhatsApp en el directorio). Verificar.",fuente:"puntoclick.com.ar"},
+{nombre:"Playmania (El Talar)",tipo:"Consolas/Juegos",direccion:"Colombia 1150",barrio:"El Talar (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en El Talar.",fuente:"puntoclick.com.ar"},
+{nombre:"God of Games",tipo:"Consolas/Juegos",direccion:"Av. Hipólito Yrigoyen 2552",barrio:"El Talar (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en El Talar (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"},
+{nombre:"SDK Games",tipo:"Consolas/Juegos",direccion:"Alexis Carrel",barrio:"Troncos del Talar (Tigre)",zona:"GBA-Norte",telefono:"",whatsapp:"",instagram:"",web:"",email:"",hace_reparaciones:"?",notas:"Local de videojuegos en Troncos del Talar (con WhatsApp en el directorio).",fuente:"puntoclick.com.ar"}
+];
+
+/* ---------- helpers ---------- */
+function slugify(s){return (s||'').toString().toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60);}
+function esc(s){return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function cleanPhone(s){
+  let d=(s||'').replace(/[^\d]/g,'');
+  if(!d) return '';
+  if(d.startsWith('00')) d=d.slice(2);
+  if(d.startsWith('54')) return d;            // ya tiene país
+  if(d.startsWith('0')) d=d.slice(1);         // saca 0 de larga distancia
+  // saca el 15 inicial si quedó (móvil viejo)
+  if(d.length>=10 && d.startsWith('15')) d=d.slice(2);
+  return '549'+d;                              // móvil Argentina
+}
+function waLink(lead){
+  const num=cleanPhone(lead.whatsapp||lead.telefono);
+  if(!num) return '';
+  const txt=encodeURIComponent(PITCH.replace('{nombre}', lead.nombre||''));
+  return 'https://wa.me/'+num+'?text='+txt;
+}
+function telLink(lead){const n=(lead.telefono||lead.whatsapp||'').replace(/[^\d+]/g,'');return n?('tel:'+n):'';}
+function igLink(lead){
+  let v=(lead.instagram||'').trim(); if(!v) return '';
+  if(v.startsWith('http')) return v;
+  return 'https://instagram.com/'+v.replace(/^@/,'');
+}
+function webLink(lead){let v=(lead.web||'').trim(); if(!v) return ''; return v.startsWith('http')?v:('https://'+v);}
+function mailLink(lead){return lead.email?('mailto:'+lead.email):'';}
+function mapsLink(lead){
+  const q=[lead.direccion,lead.barrio,'Buenos Aires'].filter(Boolean).join(', ');
+  return q?('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q)):'';
+}
+
+/* ---------- estado / carga ---------- */
+let DATA=[];
+function normalize(o){
+  const n=Object.assign({
+    nombre:'',tipo:'',direccion:'',barrio:'',zona:'',telefono:'',whatsapp:'',
+    instagram:'',web:'',email:'',hace_reparaciones:'?',notas:'',fuente:'',
+    estado:'No contactado', seguimiento:'', proximo:'', ultimo:''
+  },o);
+  if(!n.id) n.id = slugify(n.nombre+'-'+(n.barrio||n.zona))+'-'+slugify((n.direccion||'').slice(0,12));
+  return n;
+}
+function load(){
+  let stored=null;
+  try{stored=JSON.parse(localStorage.getItem(LS_KEY)||'null');}catch(e){}
+  if(!stored || !Array.isArray(stored)){
+    DATA = SEED.map(normalize);
+    save(); return;
+  }
+  // merge: sumar leads nuevos del SEED que no estén guardados (por id)
+  const byId={}; stored.forEach(l=>byId[l.id]=normalize(l));
+  SEED.map(normalize).forEach(s=>{ if(!byId[s.id]) byId[s.id]=s; });
+  DATA=Object.values(byId);
+  save();
+}
+function save(){try{localStorage.setItem(LS_KEY, JSON.stringify(DATA));}catch(e){}}
+function getLead(id){return DATA.find(l=>l.id===id);}
+
+/* ---------- filtros ---------- */
+const F={q:'',zona:'',tipo:'',estado:'',rep:false,sort:'prio'};
+function applyFilters(){
+  let r=DATA.filter(l=>{
+    if(F.zona && l.zona!==F.zona) return false;
+    if(F.tipo && l.tipo!==F.tipo) return false;
+    if(F.estado && l.estado!==F.estado) return false;
+    if(F.rep && l.hace_reparaciones!=='Sí') return false;
+    if(F.q){
+      const hay=(l.nombre+' '+l.barrio+' '+l.direccion+' '+l.notas+' '+l.zona+' '+l.tipo).toLowerCase();
+      if(!hay.includes(F.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+  const estOrder=Object.fromEntries(ESTADOS.map((e,i)=>[e.k,i]));
+  r.sort((a,b)=>{
+    if(F.sort==='nombre') return a.nombre.localeCompare(b.nombre);
+    if(F.sort==='zona') return (a.zona||'').localeCompare(b.zona||'')||a.nombre.localeCompare(b.nombre);
+    if(F.sort==='estado') return (estOrder[a.estado]-estOrder[b.estado])||a.nombre.localeCompare(b.nombre);
+    // prioridad: reparaciones primero, luego sin contactar, luego nombre
+    const pa=(a.hace_reparaciones==='Sí'?0:1), pb=(b.hace_reparaciones==='Sí'?0:1);
+    if(pa!==pb) return pa-pb;
+    if(a.estado!==b.estado) return estOrder[a.estado]-estOrder[b.estado];
+    return a.nombre.localeCompare(b.nombre);
+  });
+  return r;
+}
+
+/* ---------- render ---------- */
+function renderStats(){
+  const total=DATA.length;
+  const counts=Object.fromEntries(ESTADOS.map(e=>[e.k,0]));
+  let rep=0;
+  DATA.forEach(l=>{counts[l.estado]=(counts[l.estado]||0)+1; if(l.hace_reparaciones==='Sí')rep++;});
+  const cells=[
+    {n:total,l:'Total locales',c:'var(--green)',est:''},
+    ...ESTADOS.map(e=>({n:counts[e.k]||0,l:e.k,c:e.c,est:e.k})),
+    {n:rep,l:'🔧 Reparaciones',c:'var(--red)',est:'__rep'}
+  ];
+  document.getElementById('stats').innerHTML=cells.map(c=>
+    `<div class="stat ${ (c.est===F.estado&&c.est) || (c.est==='__rep'&&F.rep) ? 'active':''}" data-est="${c.est}">
+      <div class="n" style="color:${c.c}">${c.n}</div>
+      <div class="l">${esc(c.l)}</div>
+      <div class="bar" style="background:${c.c}"></div>
+    </div>`).join('');
+}
+
+function card(l){
+  const col=ESTADO_COLOR[l.estado]||'#94a3b8';
+  const wa=waLink(l), tel=telLink(l), ig=igLink(l), web=webLink(l), mail=mailLink(l), maps=mapsLink(l);
+  const estOpts=ESTADOS.map(e=>`<option value="${e.k}" ${e.k===l.estado?'selected':''}>${e.k}</option>`).join('');
+  return `<div class="card" style="border-left-color:${col}" data-id="${l.id}">
+    <div class="ctop">
+      <div>
+        <div class="cname">${esc(l.nombre)}</div>
+        <div class="badges">
+          ${l.tipo?`<span class="b tipo">${esc(l.tipo)}</span>`:''}
+          ${l.zona?`<span class="b zona">${esc(l.zona)}</span>`:''}
+          ${l.hace_reparaciones==='Sí'?`<span class="b rep">🔧 Repara</span>`:''}
+        </div>
+      </div>
+      ${l.hace_reparaciones==='Sí'?'<div class="cstar" title="Hace reparaciones — compra repuestos">🔥</div>':''}
+    </div>
+    ${(l.direccion||l.barrio)?`<div class="addr">📍 <a href="${maps}" target="_blank" rel="noopener">${esc([l.direccion,l.barrio].filter(Boolean).join(', '))}</a></div>`:''}
+    ${l.notas?`<div class="notes">${esc(l.notas)}</div>`:''}
+    <div class="contacts">
+      <a class="cbtn wa ${wa?'':'off'}" href="${wa||'#'}" target="_blank" rel="noopener" title="WhatsApp con mensaje de presentación">💬</a>
+      <a class="cbtn tel ${tel?'':'off'}" href="${tel||'#'}" title="Llamar">📞</a>
+      <a class="cbtn ig ${ig?'':'off'}" href="${ig||'#'}" target="_blank" rel="noopener" title="Instagram">📷</a>
+      <a class="cbtn web ${web?'':'off'}" href="${web||'#'}" target="_blank" rel="noopener" title="Web / Mercado Libre">🌐</a>
+      <a class="cbtn mail ${mail?'':'off'}" href="${mail||'#'}" title="Email">✉️</a>
+    </div>
+    <div class="crow">
+      <select class="estado" data-act="estado" style="background:${col}">${estOpts}</select>
+      <button class="exp" data-act="exp">⋯</button>
+    </div>
+    <div class="panel">
+      <div><label>Notas de seguimiento</label>
+        <textarea data-act="seg" placeholder="Qué se habló, qué quedó pendiente…">${esc(l.seguimiento)}</textarea></div>
+      <div class="crow">
+        <div><label>Próximo contacto</label><br><input type="date" data-act="prox" value="${l.proximo||''}"></div>
+        ${l.fuente?`<div class="meta" style="align-self:flex-end">Fuente: ${esc(l.fuente)}</div>`:''}
+      </div>
+      ${l.ultimo?`<div class="meta">Último cambio de estado: ${esc(l.ultimo)}</div>`:''}
+      <button class="del" data-act="del">🗑 Eliminar este local</button>
+    </div>
+  </div>`;
+}
+
+function render(){
+  renderStats();
+  const rows=applyFilters();
+  const grid=document.getElementById('grid');
+  grid.innerHTML=rows.map(card).join('');
+  document.getElementById('empty').style.display=rows.length?'none':'block';
+}
+
+/* ---------- toolbar fill ---------- */
+function fillSelects(){
+  const zonas=[...new Set(DATA.map(l=>l.zona).filter(Boolean))].sort();
+  const tipos=[...new Set(DATA.map(l=>l.tipo).filter(Boolean))].sort();
+  document.getElementById('fZona').innerHTML='<option value="">Todas las zonas</option>'+zonas.map(z=>`<option>${esc(z)}</option>`).join('');
+  document.getElementById('fTipo').innerHTML='<option value="">Todos los tipos</option>'+tipos.map(t=>`<option>${esc(t)}</option>`).join('');
+  document.getElementById('fEstado').innerHTML='<option value="">Todos los estados</option>'+ESTADOS.map(e=>`<option>${e.k}</option>`).join('');
+}
+
+/* ---------- events ---------- */
+document.getElementById('q').addEventListener('input',e=>{F.q=e.target.value;render();});
+document.getElementById('fZona').addEventListener('change',e=>{F.zona=e.target.value;render();});
+document.getElementById('fTipo').addEventListener('change',e=>{F.tipo=e.target.value;render();});
+document.getElementById('fEstado').addEventListener('change',e=>{F.estado=e.target.value;render();});
+document.getElementById('fSort').addEventListener('change',e=>{F.sort=e.target.value;render();});
+document.getElementById('chkRep').addEventListener('change',e=>{
+  F.rep=e.target.checked; document.getElementById('chkRepW').classList.toggle('on',F.rep); render();
+});
+
+// stat chips -> filtran por estado / reparaciones
+document.getElementById('stats').addEventListener('click',e=>{
+  const s=e.target.closest('.stat'); if(!s)return;
+  const est=s.dataset.est;
+  if(est==='__rep'){F.rep=!F.rep;document.getElementById('chkRep').checked=F.rep;document.getElementById('chkRepW').classList.toggle('on',F.rep);}
+  else {F.estado = (F.estado===est)?'':est; document.getElementById('fEstado').value=F.estado;}
+  render();
+});
+
+// delegación en las cards
+document.getElementById('grid').addEventListener('click',e=>{
+  const c=e.target.closest('.card'); if(!c)return; const id=c.dataset.id; const l=getLead(id); if(!l)return;
+  const act=e.target.closest('[data-act]')?.dataset.act;
+  if(act==='exp'){ c.querySelector('.panel').classList.toggle('open'); }
+  if(act==='del'){
+    if(confirm('¿Eliminar "'+l.nombre+'" del CRM?')){ DATA=DATA.filter(x=>x.id!==id); save(); render(); }
+  }
+});
+document.getElementById('grid').addEventListener('change',e=>{
+  const c=e.target.closest('.card'); if(!c)return; const l=getLead(c.dataset.id); if(!l)return;
+  const act=e.target.dataset.act;
+  if(act==='estado'){ l.estado=e.target.value; l.ultimo=new Date().toLocaleDateString('es-AR'); save(); render(); }
+  if(act==='prox'){ l.proximo=e.target.value; save(); }
+});
+document.getElementById('grid').addEventListener('input',e=>{
+  const c=e.target.closest('.card'); if(!c)return; const l=getLead(c.dataset.id); if(!l)return;
+  if(e.target.dataset.act==='seg'){ l.seguimiento=e.target.value; save(); }
+});
+
+/* ---------- agregar ---------- */
+const ov=document.getElementById('overlay');
+document.getElementById('btnAdd').onclick=()=>ov.classList.add('open');
+document.getElementById('mCancel').onclick=()=>ov.classList.remove('open');
+ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open');});
+document.getElementById('mSave').onclick=()=>{
+  const nombre=document.getElementById('m_nombre').value.trim();
+  if(!nombre){alert('Poné al menos el nombre.');return;}
+  const nuevo=normalize({
+    nombre, tipo:document.getElementById('m_tipo').value, zona:document.getElementById('m_zona').value,
+    barrio:document.getElementById('m_barrio').value.trim(), direccion:document.getElementById('m_direccion').value.trim(),
+    whatsapp:document.getElementById('m_whatsapp').value.trim(), instagram:document.getElementById('m_instagram').value.trim(),
+    hace_reparaciones:document.getElementById('m_rep').value, notas:document.getElementById('m_notas').value.trim(),
+    fuente:'Carga manual'
+  });
+  nuevo.id+='-'+Math.random().toString(36).slice(2,6);
+  DATA.unshift(nuevo); save(); fillSelects(); render(); ov.classList.remove('open');
+  ['m_nombre','m_barrio','m_direccion','m_whatsapp','m_instagram','m_notas'].forEach(i=>document.getElementById(i).value='');
+};
+
+/* ---------- export CSV ---------- */
+document.getElementById('btnExport').onclick=()=>{
+  const cols=['nombre','tipo','zona','barrio','direccion','telefono','whatsapp','instagram','web','email','hace_reparaciones','estado','seguimiento','proximo','ultimo','notas','fuente'];
+  const head=cols.join(',');
+  const esc2=v=>{v=(v==null?'':String(v)); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const body=DATA.map(l=>cols.map(c=>esc2(l[c])).join(',')).join('\n');
+  const blob=new Blob(['﻿'+head+'\n'+body],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='CRM_gremio_spotfixes_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+};
+
+/* ---------- reset ---------- */
+document.getElementById('btnReset').onclick=()=>{
+  if(confirm('Esto borra TODO tu seguimiento (estados, notas, fechas) y locales agregados a mano, y vuelve a los datos originales. ¿Seguro?')){
+    localStorage.removeItem(LS_KEY); load(); fillSelects(); render();
+  }
+};
+
+/* ---------- init ---------- */
+load(); fillSelects(); render();
+</script>
+</body>
+</html>
