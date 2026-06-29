@@ -187,10 +187,16 @@
   .riconbtn{background:#f1f5f9;border:1px solid var(--line);border-radius:7px;width:28px;height:28px;cursor:pointer;font-size:11px;flex:none}
   .poprutabtn{width:100%;margin-top:7px;padding:7px;border-radius:8px;border:1px solid var(--line);font-weight:700;cursor:pointer;font-size:12.5px}
   @media(max-width:560px){
-    .toolbar{top:78px}
-    .htitle h1{font-size:17px}
+    header{position:static;padding:9px 14px}
+    .htitle p{display:none}
+    .htitle h1{font-size:16px}
+    .logo{width:34px;height:34px;font-size:19px;border-radius:10px}
+    .hwrap{gap:9px}
+    .hbtns{gap:6px}
+    .hbtn{padding:6px 9px;font-size:11.5px}
+    .toolbar{top:0}
     #grid{grid-template-columns:1fr}
-    #map{height:74vh}
+    #map{height:80vh}
   }
 </style>
 </head>
@@ -205,7 +211,7 @@
     </div>
     <div class="hspace"></div>
     <div class="hbtns">
-      <button class="hbtn" id="btnRuta" style="background:rgba(255,255,255,.30)">🚗 Ruta del día (0)</button>
+      <button class="hbtn" id="btnRuta" style="background:rgba(255,255,255,.30)">🚗 Ruta (0)</button>
       <button class="hbtn" id="btnAdd">＋ Agregar</button>
       <button class="hbtn" id="btnImport" title="Cargar un CSV exportado (para sincronizar celu ↔ PC)">⬆️ Importar CSV</button>
       <button class="hbtn" id="btnExport">⬇️ Exportar CSV</button>
@@ -786,7 +792,7 @@ const RUTA_KEY='sfx_crm_ruta_v1';
 let RUTA=[]; try{ const r=JSON.parse(localStorage.getItem(RUTA_KEY)||'[]'); if(Array.isArray(r)) RUTA=r; }catch(e){}
 function rutaSave(){ try{localStorage.setItem(RUTA_KEY,JSON.stringify(RUTA));}catch(e){} }
 function enRuta(id){ return RUTA.indexOf(id)>=0; }
-function updateRutaBtn(){ const b=document.getElementById('btnRuta'); if(b) b.textContent='🚗 Ruta del día ('+RUTA.length+')'; }
+function updateRutaBtn(){ const b=document.getElementById('btnRuta'); if(b) b.textContent='🚗 Ruta ('+RUTA.length+')'; }
 function toggleRuta(id){
   const i=RUTA.indexOf(id); if(i>=0)RUTA.splice(i,1); else RUTA.push(id);
   rutaSave(); updateRutaBtn();
